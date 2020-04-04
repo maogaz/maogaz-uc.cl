@@ -1,0 +1,31 @@
+<h4> <%= link_to 'Volver inicio', root_path %></h4>
+<hr>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12 mt-5">
+      <div class="mx-auto mt-5" style="width: 400px">
+        <%= form_with(url: search_path, method: 'get', local: true) do %>
+          <div class="form-group">
+            <%= label_tag :motivo, 'Busqueda '%>
+            <%= text_field_tag :motivo, nil, placeholder: 'Ejemplo: Morty', class: 'form-control' %>
+          </div>
+          <%= button_tag 'Search', class: 'btn btn-success btn-block' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<hr>
+<h1> Nombre del episodio: <%=@result['name']%></h1>
+<hr>
+<h2> Fecha de estreno: <%=@result['air_date']%></h2>
+<hr>
+<h2> Codigo episodio: <%=@result['episode']%></h2>
+<hr>
+<h2> Personajes:</h2>
+<hr>
+<% @result['characters'].each do |character| %>
+    <% @url1 = character %>
+    <% @response1 = RestClient.get @url1 %>
+    <% @result1 = JSON.parse @response1.to_str %>
+    <h3> - <%= link_to @result1['name'], character_index_path(:motivo => @result1['id']) %></h3>
+<% end %>

@@ -1,0 +1,55 @@
+<h4> <%= link_to 'Volver inicio', root_path %></h4>
+<hr>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12 mt-5">
+      <div class="mx-auto mt-5" style="width: 400px">
+        <%= form_with(url: search_path, method: 'get', local: true) do %>
+          <div class="form-group">
+            <%= label_tag :motivo, 'Busqueda '%>
+            <%= text_field_tag :motivo, nil, placeholder: 'Ejemplo: Morty', class: 'form-control' %>
+          </div>
+          <%= button_tag 'Search', class: 'btn btn-success btn-block' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<hr>
+<h1> Nombre: <%=@result['name']%></h1>
+<hr>
+<h3> Estatus: <%=@result['status']%></h3>
+<hr>
+<h3> Especie: <%=@result['species']%></h3>
+<hr>
+<h3> Tipo: <%=@result['type']%></h3>
+<hr>
+<h3> Genero: <%=@result['gender']%></h3>
+<hr>
+
+<% @url2 = @result['origin']['url'] %>
+<% @response2 = RestClient.get @url2 %>
+<% @result2 = JSON.parse @response2.to_str %>
+<h2> Origen: <%= link_to @result['origin']['name'], place_index_path(:motivo => @result2['id']) %></h2>
+
+<hr>
+<% @url3 = @result['location']['url'] %>
+<% @response3 = RestClient.get @url3 %>
+<% @result3 = JSON.parse @response3.to_str %>
+<h2> Ubicacion: <%= link_to @result['location']['name'], place_index_path(:motivo => @result3['id']) %></h2>
+
+<hr>
+
+<h3> Imagen:</h3>
+<img src=<%=@result['image']%>>
+<hr>
+
+
+<h2> Episodios: </h2>
+<hr>
+
+<% @result['episode'].each do |episode| %>
+    <% @url1 = episode %>
+    <% @response1 = RestClient.get @url1 %>
+    <% @result1 = JSON.parse @response1.to_str %>
+    <h3> - <%= link_to @result1['name'], episode_index_path(:motivo => @result1['id']) %></h3>
+<% end %>
